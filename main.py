@@ -57,9 +57,9 @@ class Task():
                 return app.result
 
     def main(self):
-        self.print_info()
         marker = True
         while marker:
+            self.print_info()
             login = input("Введите имя пользователя: ")
             user = find_user(login, self.users_list)
             if user != False:
@@ -69,8 +69,14 @@ class Task():
                     while True:
                         a = input("Жду ваших указаний > ")
                         if a == "request":
-                            file_number = int_inputer("К какому файлу вы хотите осуществит доступ? > ", self.files_count)
+                            file_number = int_inputer("К какому файлу вы хотите осуществить доступ? > ", self.files_count)
                             user.requestfile(self.files_list[file_number - 1])
+                        elif a == "read":
+                            file_number = int_inputer("Какой файл вы хотите прочитать? > ", self.files_count)
+                            self.files_list[file_number - 1].read_file(user)
+                        elif a == "write":
+                            file_number = int_inputer("В какой файл вы хотите вписать данные? > ", self.files_count)
+                            self.files_list[file_number - 1].write_to_file(user)
                         elif a == "quit":
                             print(f"Работа пользователя {user.name} завершена. До свидания")
                             break

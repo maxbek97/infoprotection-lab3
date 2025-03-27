@@ -45,23 +45,6 @@ class GraphicalKeyApp:
                 self.canvas.create_oval(x-10, y-10, x+10, y+10, fill="gray")
                 index += 1
 
-    def generate_random_key(self):
-        available_indices = list(range(9))
-        random.shuffle(available_indices)
-        key_length = random.randint(4, 9)  # Длина ключа от 4 до 9 точек
-        key_sequence = [available_indices.pop(0)]
-
-        while len(key_sequence) < key_length:
-            next_index = available_indices.pop(0)
-            last_index = key_sequence[-1]
-            intermediate = self.get_intermediate_point(last_index, next_index)
-            if intermediate is None or intermediate in key_sequence:
-                key_sequence.append(next_index)
-            else:
-                key_sequence.append(intermediate)
-                key_sequence.append(next_index)
-        return key_sequence
-
     def start_drawing(self, event):
         self.points = []
         self.canvas.delete("lines")
