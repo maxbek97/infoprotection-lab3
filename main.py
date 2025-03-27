@@ -35,8 +35,8 @@ class Task():
         self.path = path
         self.users_count = int_inputer("Введите кол-во пользователей > ", len(self.user_names_examples))
         self.files_count = int_inputer("Введите кол-во файлов > ", 20)
-        self.users_list = [User(self.path, self.user_names_examples[i], self.files_count) for i in range(0, len(self.user_names_examples))]
-        self.files_list = [File_binder(self.path, i) for i in range(0, self.files_count)]
+        self.users_list = [User(self.path, self.user_names_examples[i], self.files_count) for i in range(0, self.users_count)]
+        self.files_list = [File_binder(self.path, i) for i in range(1, self.files_count + 1)]
         # Очистка файла keys
 
 
@@ -66,28 +66,19 @@ class Task():
                 if self.check_user_password(user.key):
                     print("Идентификация прошла успешно. Добро пожаловать в систему.")
                     print("Перечень доступных объектов: " + ", ".join([x.name for x in self.files_list if x.access_right <= user.mandate_rights]))
-                    # user.print_rights_list(self.files_count)
-                    # while True:
-                    #     a = input("Жду ваших указаний > ")
-                    #     if a == "read":
-                    #         file_number = int_inputer("Над каким файлом происходит операция > ", self.files_count)
-                    #         user.readfile(file_number)
-                    #     elif a == "write":
-                    #         file_number = int_inputer("Над каким файлом происходит операция > ", self.files_count)
-                    #         user.writefile(file_number)
-                    #     elif a == "grant":
-                    #         file_number = int_inputer("Право на какой файл передаётся > ", self.files_count)
-                    #         right_type = input("Какое право передаётся? > ").lower().strip()
-                    #         user_name = input("Какому пользователю передается право > ")
-                    #         user.transfer_right(file_number, right_type, user_name, self.users_list)
-                    #     elif a == "quit":
-                    #         print(f"Работа пользователя {user.name} завершена. До свидания")
-                    #         break
-                    #     elif a == "exit":
-                    #         print("Уиа пока")
-                    #         return
-                    #     else:
-                    #         print("Ошибка ввода")
+                    while True:
+                        a = input("Жду ваших указаний > ")
+                        if a == "request":
+                            file_number = int_inputer("К какому файлу вы хотите осуществит доступ? > ", self.files_count)
+                            user.requestfile(self.files_list[file_number - 1])
+                        elif a == "quit":
+                            print(f"Работа пользователя {user.name} завершена. До свидания")
+                            break
+                        elif a == "exit":
+                            print("Уиа пока")
+                            return
+                        else:
+                            print("Ошибка ввода")
                 else:
                     continue
 

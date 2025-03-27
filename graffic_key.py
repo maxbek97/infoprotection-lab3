@@ -103,7 +103,7 @@ class GraphicalKeyApp:
         if entered_sequence == self.correct_key_sequence:
             messagebox.showinfo("Success", "Access Granted!")
             self.result = True
-            self.root.quit()
+            self.root.destroy()
         else:
             messagebox.showerror("Failure", "Access Denied!")
             self.points = []

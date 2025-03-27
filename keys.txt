@@ -1,5 +1,4 @@
-Ivan: 6783
-Boris: 7246184
-Maxeeb: 258543670
-Skibidi: 032461458
-Lol: 72104
+Ivan: 852401
+Boris: 12463580
+Maxeeb: 7345
+Skibidi: 630314752
