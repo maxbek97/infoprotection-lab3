@@ -40,6 +40,9 @@ class GraphicalKeyApp:
         self.lockout_time = 30  # Блокировка на 30 секунд
         self.locked_until = 0
 
+        self.lockout_label = tk.Label(root, text="", fg="red", font=("Arial", 12))
+        self.lockout_label.pack()
+
     def create_grid(self):
         start_x, start_y = 100, 100
         spacing = 100
@@ -113,7 +116,18 @@ class GraphicalKeyApp:
             self.failed_attempts += 1
             if self.failed_attempts >= 3:
                 self.locked_until = time.time() + self.lockout_time
+                self.update_lockout_timer()
+                self.root.after(1000, self.update_lockout_timer)
                 messagebox.showwarning("Locked", f"Too many failed attempts. Try again in {self.lockout_time} seconds.")
+
+    def update_lockout_timer(self):
+        remaining_time = int(self.locked_until - time.time())
+        if remaining_time > 0:
+            self.lockout_label.config(text=f"Locked. Try again in {remaining_time} seconds")
+            self.root.after(1000, self.update_lockout_timer)
+        else:
+            self.lockout_label.config(text="")
+            self.failed_attempts = 0
 
     def on_close(self):
         self.result = False
