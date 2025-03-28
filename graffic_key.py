@@ -13,24 +13,25 @@ class Point:
         return math.sqrt((self.x - x) ** 2 + (self.y - y) ** 2) < tolerance
 
 class GraphicalKeyApp:
-    def __init__(self, root, correct_sequence):
+    def __init__(self, root, correct_sequence=None, mode="auth"):
         self.root = root
-        self.root.title("Graphical Key Authentication")
+        self.mode = mode  # auth - вход, register - регистрация
+        self.root.title("Register Key" if mode == "register" else "Graphical Key Authentication")
         self.root.protocol("WM_DELETE_WINDOW", self.on_close)
 
         self.canvas = tk.Canvas(root, width=400, height=400, bg="white")
         self.canvas.pack()
 
-        self.points = []  # Список пройденных точек
-        self.grid_points = []  # Список всех точек сетки
+        self.points = []  
+        self.grid_points = []  
         self.create_grid()
-        self.correct_key_sequence = correct_sequence  # Генерация случайного ключа
+        self.correct_key_sequence = correct_sequence  
 
         self.canvas.bind("<Button-1>", self.start_drawing)
         self.canvas.bind("<B1-Motion>", self.draw)
         self.canvas.bind("<ButtonRelease-1>", self.end_drawing)
 
-        self.result = None
+        self.result = None  
 
     def create_grid(self):
         start_x, start_y = 100, 100
@@ -56,7 +57,11 @@ class GraphicalKeyApp:
 
     def end_drawing(self, event):
         self.add_point(event.x, event.y)
-        self.check_key()
+        if self.mode == "register":
+            self.result = [p.index for p in self.points]  
+            self.root.destroy()  
+        else:
+            self.check_key()
 
     def add_point(self, x, y):
         for point in self.grid_points:
@@ -82,7 +87,6 @@ class GraphicalKeyApp:
 
     def check_key(self):
         entered_sequence = [p.index for p in self.points]
-        print("Entered sequence:", entered_sequence)  # Вывод введенной последовательности
         if entered_sequence == self.correct_key_sequence:
             messagebox.showinfo("Success", "Access Granted!")
             self.result = True

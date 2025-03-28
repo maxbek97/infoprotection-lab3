@@ -3,40 +3,11 @@ from main import find_user
 import os
         
 class User():
-    def __init__(self, path, name, files_count):
+    def __init__(self, path, name, key):
         self.path = path
         self.name = name
         self.mandate_rights = random.randint(0, 2)
-        self.key = self.generate_random_key()
-
-    # Генерация корректного ключа
-    def generate_random_key(self):
-        VALID_MOVES = {
-        0: {1, 3, 4, 5, 7}, 
-        1: {0, 2, 3, 4, 5, 6, 8}, 
-        2: {1, 3, 4, 5, 7}, 
-        3: {0, 1, 2, 4, 6, 7, 8}, 
-        4: {0, 1, 2, 3, 5, 6, 7, 8}, 
-        5: {0, 1, 2, 4, 6, 7, 8}, 
-        6: {1, 3, 4, 5, 7}, 
-        7: {0, 2, 3, 4, 5, 6, 8}, 
-        8: {1, 3, 4, 5, 7}
-    }
-        key_length = random.randint(4, 7)  # Длина ключа
-        key_sequence = [random.randint(0, 8)]  # Начинаем с случайной точки
-
-        while len(key_sequence) < key_length:
-            last = key_sequence[-1]
-            possible_moves = list(VALID_MOVES[last])  # Получаем список доступных точек
-            random.shuffle(possible_moves)
-
-            for next_point in possible_moves:
-                if next_point != key_sequence[-1]:  # Запрещаем повтор подряд
-                    key_sequence.append(next_point)
-                    break
-        f = open("keys.txt", "a")
-        f.write(self.name + ": " + "".join(map(str, key_sequence)) + "\n")
-        return key_sequence
+        self.key = key
 
     def requestfile(self, file):
         if self.mandate_rights >= file.access_right:
