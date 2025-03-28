@@ -1,5 +1,5 @@
-Ivan: 142543
-Boris: 7467
-Maxeeb: 3750721
-Skibidi: 050507
-Uia: 072
+Ivan: 1276405
+Boris: 704310
+Maxeeb: 815072
+Skibidi: 6740
+Uia: 0147

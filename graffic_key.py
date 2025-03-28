@@ -1,7 +1,10 @@
+import os
+import time
 import tkinter as tk
 from tkinter import messagebox
+from User_local import *
+from graffic_key import *
 import math
-import random
 
 class Point:
     def __init__(self, index, x, y):
@@ -11,6 +14,7 @@ class Point:
 
     def is_close(self, x, y, tolerance=30):
         return math.sqrt((self.x - x) ** 2 + (self.y - y) ** 2) < tolerance
+
 
 class GraphicalKeyApp:
     def __init__(self, root, correct_sequence=None, mode="auth"):
@@ -32,6 +36,9 @@ class GraphicalKeyApp:
         self.canvas.bind("<ButtonRelease-1>", self.end_drawing)
 
         self.result = None  
+        self.failed_attempts = 0
+        self.lockout_time = 30  # Блокировка на 30 секунд
+        self.locked_until = 0
 
     def create_grid(self):
         start_x, start_y = 100, 100
@@ -47,6 +54,9 @@ class GraphicalKeyApp:
                 index += 1
 
     def start_drawing(self, event):
+        if self.mode == "auth" and time.time() < self.locked_until:
+            messagebox.showwarning("Locked", "Too many failed attempts. Try again later.")
+            return
         self.points = []
         self.canvas.delete("lines")
         self.add_point(event.x, event.y)
@@ -86,6 +96,10 @@ class GraphicalKeyApp:
                 break
 
     def check_key(self):
+        if self.mode == "auth" and time.time() < self.locked_until:
+            messagebox.showwarning("Locked", "Too many failed attempts. Try again later.")
+            return
+
         entered_sequence = [p.index for p in self.points]
         if entered_sequence == self.correct_key_sequence:
             messagebox.showinfo("Success", "Access Granted!")
@@ -95,6 +109,11 @@ class GraphicalKeyApp:
             messagebox.showerror("Failure", "Access Denied!")
             self.points = []
             self.canvas.delete("lines")
+            
+            self.failed_attempts += 1
+            if self.failed_attempts >= 3:
+                self.locked_until = time.time() + self.lockout_time
+                messagebox.showwarning("Locked", f"Too many failed attempts. Try again in {self.lockout_time} seconds.")
 
     def on_close(self):
         self.result = False
